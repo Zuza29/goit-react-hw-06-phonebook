@@ -1,0 +1,15 @@
+.button {
+    width: 80%;
+    margin: 40px auto;
+    padding: 10px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    display: inherit;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: darkgray;
+}
