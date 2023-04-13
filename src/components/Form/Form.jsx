@@ -1,25 +1,32 @@
 import { useState } from 'react';
 import css from './Form.module.css';
-import PropTypes from 'prop-types';
 import { Button } from 'components/Button/Button';
 import { nanoid } from 'nanoid';
 import { Notify } from 'notiflix';
+import { getContacts } from 'redux/selectors';
+import { addContacts } from '../../redux/actions';
+import { useDispatch, useSelector } from 'react-redux';
 
-export const Form = ({ contacts, addUserToContacts }) => {
+export const Form = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
   const handleChange = event => {
-    const prop = event.currentTarget.name;
-    switch (prop) {
+    const { name, value } = event.currentTarget;
+    switch (name) {
       case 'name':
-        setName(event.currentTarget.value);
+        setName(value);
         break;
+
       case 'number':
-        setNumber(event.currentTarget.value);
+        setNumber(value);
         break;
+
       default:
-        throw new Error('Error');
+        return;
     }
   };
 
@@ -46,7 +53,7 @@ export const Form = ({ contacts, addUserToContacts }) => {
     });
 
     if (!contactExists) {
-      addUserToContacts(user);
+      dispatch(addContacts(user));
       Notify.success(`${user.name} was added to the Phonebook.`);
     }
 
@@ -80,15 +87,12 @@ export const Form = ({ contacts, addUserToContacts }) => {
           onChange={handleChange}
           required
         />
-        <Button type="submit" name="Add contact"></Button>
+        <Button
+          type="submit"
+          name="Add contact"
+         
+        ></Button>
       </form>
     </>
   );
-};
-
-Form.propTypes = {
-  submitForm: PropTypes.func,
-  name: PropTypes.string,
-  number: PropTypes.string,
-  handleChange: PropTypes.func,
 };

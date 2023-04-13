@@ -1,12 +1,28 @@
 import css from '../ContactList/ContactList.module.css';
 import { Button } from 'components/Button/Button';
-import PropTypes from 'prop-types';
+import { deleteContacts } from '../../redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
+import { getFilterValue, getContacts } from 'redux/selectors';
 
-export const ContactList = ({ contacts, deleteContact }) => {
+export const ContactList = () => {
+    const contacts = useSelector(getContacts);
+    const filter = useSelector(getFilterValue);
+    const dispatch = useDispatch();
+    const filteredContacts = contacts.filter(
+      contact =>
+        contact.name.toLowerCase().includes(filter.toLowerCase()) ||
+        contact.number
+          .replace(/-|\s/g, '')
+          .includes(filter.replace(/-|\s/g, ''))
+    );
+
+    const deleteContact = data => {
+      dispatch(deleteContacts(data));
+    };
   return (
     <>
       <ul className={css.contactList}>
-        {contacts.map(({ name, number, id }) => (
+        {filteredContacts.map(({ name, number, id }) => (
           <li className={css.contactListItem} key={id}>
             <div className={css.column1}>
               <span className={css.itemText}>
@@ -34,7 +50,4 @@ export const ContactList = ({ contacts, deleteContact }) => {
   );
 };
 
-ContactList.propTypes = {
-  contacts: PropTypes.array,
-  deleteContact: PropTypes.func,
-};
+

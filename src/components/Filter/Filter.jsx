@@ -1,26 +1,27 @@
 import css from '../Form/Form.module.css';
-import PropTypes from 'prop-types';
+import { filterContacts } from '../../redux/actions';
+import { useDispatch } from 'react-redux';
 
-export const Filter = ({ value, onChange }) => {
+export const Filter = () => {
+  const dispatch = useDispatch();
+
+  const changeFilter = evt => {
+    const value = evt.target.value.toLowerCase();
+    dispatch(filterContacts(value));
+  };
   return (
     <div className={css.filter}>
       <label htmlFor="filter">
         Filter contacts by name
         <input
           className={css.input}
-          type="search"
-          value={value}
-          onChange={onChange}
+          type="text"
+          name="name"
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          onChange={changeFilter}
           id="filter"
         />
       </label>
- 
     </div>
   );
-};
-
-Filter.propTypes = {
-  onChange: PropTypes.func,
-  filteredContacts: PropTypes.array,
-  value: PropTypes.string,
 };
